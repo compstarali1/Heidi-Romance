@@ -1,39 +1,216 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Van’s Warm Embrace</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:ital,wght@0,400;1,400;1,700&display=swap" rel="stylesheet">
-
-<style>
-
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Audio Experience</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        dark: '#0F0F17',
+                        love: '#ff6b9d'
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .glass-effect {
+                background: rgba(255, 255, 255, 0.08);
+                backdrop-filter: blur(12px);
+                -webkit-backdrop-filter: blur(12px);
+                border: 1px solid rgba(255, 255, 255, 0.18);
+                box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            }
+            .btn-3d {
+                transform-style: preserve-3d;
+                transition: all 0.3s ease;
+            }
+            .btn-3d:hover {
+                transform: translateY(-5px) rotateX(5deg) rotateY(-5deg);
+                box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+            }
+            .video-opacity {
+                opacity: 0.4;
+            }
+            .image-opacity {
+                opacity: 0.5;
+            }
+            .love-glow {
+                text-shadow: 0 0 10px #ff6b9d, 0 0 20px #ff6b9d, 0 0 30px #ff6b9d;
+            }
+            .heart-beat {
+                animation: beat 1.5s infinite alternate;
+            }
+            @keyframes beat {
+                from { transform: scale(1); }
+                to { transform: scale(1.1); }
+            }
+            .float-animation {
+                animation: float 6s ease-in-out infinite;
+            }
+            @keyframes float {
+                0% { transform: translateY(0px); }
+                50% { transform: translateY(-20px); }
+                100% { transform: translateY(0px); }
+            }
+        }
+#bgSlider img {
+    width: 100%;
+    height: 100vh;
+    object-fit: cover;
+    position: absolute;
+    opacity: 0;
+    transition: opacity 1.5s ease-in-out;
 }
 
-body,html{
-width:100%;
-height:100%;
-font-family:'Playfair Display',serif;
-color:#ffffff;
+#bgSlider img.active {
+    opacity: 0.25; /* adjust transparency */
 }
+    </style>
+</head>
+<body class="bg-dark text-white overflow-hidden h-screen w-screen">
 
-.fixed-bg-container{
-position:fixed;
-top:0;
-left:0;
-width:100vw;
-height:100vh;
-z-index:-10;
-}
+    <!-- Background Video -->
+    <video id="bgVideo" class="fixed top-0 left-0 w-full h-full object-cover video-opacity -z-20" loop muted playsinline>
+        <source src="ali.mp4" type="video/mp4">
+    </video>
 
-.fixed-bg-container img{
-width:100%;
-height:100%;
+<!-- Background Image Slider -->
+<div id="bgSlider" class="fixed top-0 left-0 w-full h-full -z-10 overflow-hidden hidden">
+
+<div class="slides">
+    <img src="https://iili.io/qvTzTUG.jpg">
+    <img src="https://iili.io/qvTxyV1.jpg">
+    <img src="https://iili.io/qvTInmQ.jpg">
+    <img src="https://iili.io/qvTIB7j.jpg">
+    <img src="https://iili.io/qvTTH8J.jpg">
+    <img src="https://iili.io/qvTTLSs.jpg">
+    <img src="https://iili.io/qvTTpx2.jpg">
+    <img src="https://iili.io/qvTuXef.jpg">
+    <img src="https://iili.io/qvTutrF.jpg">
+</div>
+
+</div>
+
+    <!-- Buttons Container - Top Right -->
+    <div class="fixed top-6 right-6 flex flex-col gap-4 z-20">
+        <!-- Sides Button -->
+        <button id="toggleBtn" onclick="toggleBackground()" 
+                class="glass-effect px-6 py-3 rounded-xl btn-3d text-xl font-bold">
+            <i class="fa fa-exchange mr-2"></i> Sides
+        </button>
+
+        <!-- Read Story Button -->
+        <a href="stories.html" 
+           class="glass-effect px-6 py-3 rounded-xl btn-3d text-xl font-bold text-center">
+            <i class="fa fa-book mr-2"></i> Read Story
+        </a>
+    </div>
+
+    <!-- Main Content -->
+    <main class="relative z-10 w-full h-full flex items-center pl-8 md:pl-16">
+        
+        <!-- Audio Buttons Container -->
+        <div class="flex flex-col gap-4 transform scale-50 origin-top-left md:scale-75">
+            
+            <!-- Button 1 - Shattered Composure-->
+            <button onclick="playAudio('story1.mp3')" 
+                    class="btn-3d glass-effect px-8 py-6 rounded-2xl w-48 h-48 flex flex-col items-center justify-center group border-love/50 hover:bg-love/20">
+                <i class="fa fa-heart text-5xl mb-3 text-love love-glow heart-beat"></i>
+                <span class="text-2xl font-bold tracking-wider text-love love-glow">Shattered Composure</span>
+                <span class="text-sm text-love/70 mt-2">Play Story</span>
+            </button>
+
+            <!-- Button 2 -->
+            <button onclick="playAudio('story2.mp3')" 
+                    class="btn-3d glass-effect px-8 py-6 rounded-2xl w-48 h-48 flex flex-col items-center justify-center group">
+                <i class="fa fa-play-circle text-5xl mb-3 text-white/80 group-hover:text-white transition-colors"></i>
+                <span class="text-xl font-semibold tracking-wider">Mirrored Surrender</span>
+                <span class="text-xs text-white/60 mt-1">Listen Now</span>
+            </button>
+
+            <!-- Button 3 Stop -->
+            <button onclick="stopAudio()" 
+                    class="btn-3d glass-effect px-8 py-6 rounded-2xl w-48 h-48 flex flex-col items-center justify-center group hover:bg-red-500/20">
+                <i class="fa fa-stop-circle text-5xl mb-3 text-white/80 group-hover:text-white transition-colors"></i>
+                <span class="text-xl font-semibold tracking-wider">STOP</span>
+                <span class="text-xs text-white/60 mt-1">End playback</span>
+            </button>
+        </div>
+
+    </main>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+    let currentAudio = new Audio();
+    const bgMusic = new Audio('heaven.mp3');
+    const video = document.getElementById('bgVideo');
+    const slider = document.getElementById('bgSlider'); // FIXED
+    const toggleBtn = document.getElementById('toggleBtn');
+    let isImageMode = false;
+
+    // SLIDER FIX
+    const slides = document.querySelectorAll('#bgSlider img');
+    let index = 0;
+
+    function showSlide() {
+        slides.forEach(el => el.classList.remove('active'));
+        slides[index].classList.add('active');
+        index = (index + 1) % slides.length;
+    }
+
+    showSlide();
+    setInterval(showSlide, 3000);
+
+    // AUDIO + VIDEO
+    bgMusic.loop = true;
+    bgMusic.volume = 0.5;
+
+    video.play();
+    bgMusic.play().catch(() => {});
+
+    // TOGGLE FIX
+    window.toggleBackground = function () {
+        isImageMode = !isImageMode;
+
+        if (isImageMode) {
+            video.classList.add('hidden');
+            slider.classList.remove('hidden'); // FIXED
+            toggleBtn.innerHTML = '<i class="fa fa-video-camera mr-2"></i> Video';
+        } else {
+            video.classList.remove('hidden');
+            slider.classList.add('hidden'); // FIXED
+            toggleBtn.innerHTML = '<i class="fa fa-image mr-2"></i> Sides';
+        }
+    }
+
+    window.playAudio = function (src) {
+        if (currentAudio.src !== src) {
+            currentAudio.src = src;
+        }
+        currentAudio.play();
+        video.play();
+    }
+
+    window.stopAudio = function () {
+        currentAudio.pause();
+        currentAudio.currentTime = 0;
+    }
+
+});
+</script>
+</body>
+</html>
 object-fit:cover;
 display:block;
 }
