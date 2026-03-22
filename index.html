@@ -62,6 +62,274 @@
                 50% { transform: translateY(-20px); }
                 100% { transform: translateY(0px); }
             }
+
+            /* NEW STYLES FOR ETHEREAL BUTTON */
+            .ethereal-btn{
+                padding:25px 60px;
+                font-size:24px;
+                font-weight:bold;
+                color:#fff;
+                background:linear-gradient(145deg,#9c27b0,#3f51b5);
+                border:none;
+                border-radius:12px;
+                cursor:pointer;
+                box-shadow:0 10px 20px rgba(0,0,0,0.4);
+                transition: all 0.3s ease;
+            }
+            .ethereal-btn:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+            }
+            .overlay {
+                position:fixed;
+                top:50%;
+                left:50%;
+                transform:translate(-50%,-50%);
+                width:100%; /* CHANGED TO 100% WIDTH */
+                height:auto; /* CHANGED TO AUTO HEIGHT */
+                max-width:90%;
+                margin:20px;
+                display:none;
+                z-index:999;
+            }
+            .overlay img{
+                width:100%;
+                height:auto; /* MAINTAINS RATIO */
+                border-radius:12px;
+            }
+            .audio-box{
+                position:fixed;
+                bottom:20px;
+                left:50%;
+                transform:translateX(-50%);
+                width:70%;
+                display:none;
+                z-index: 1000;
+            }
+            /* NEW CLOSE BUTTON STYLE */
+            .close-btn {
+                position: absolute;
+                top: 15px;
+                right: 15px;
+                background: rgba(0,0,0,0.5);
+                color: white;
+                border: none;
+                border-radius: 50%;
+                width: 40px;
+                height: 40px;
+                font-size: 20px;
+                cursor: pointer;
+                z-index: 1001;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            .close-btn:hover {
+                background: rgba(255,0,0,0.7);
+            }
+        }
+    </style>
+</head>
+<body class="bg-dark text-white overflow-hidden h-screen w-screen">
+
+    <!-- Background Video -->
+    <video id="bgVideo" class="fixed top-0 left-0 w-full h-full object-cover video-opacity -z-20" loop muted playsinline>
+        <source src="ali.mp4" type="video/mp4">
+    </video>
+
+    <!-- Background Image Slider -->
+    <div id="bgSlider" class="fixed top-0 left-0 w-full h-full -z-10 overflow-hidden hidden">
+        <div class="slides">
+            <img src="https://iili.io/qvTzTUG.jpg">
+            <img src="https://iili.io/qvTxyV1.jpg">
+            <img src="https://iili.io/qvTInmQ.jpg">
+            <img src="https://iili.io/qvTIB7j.jpg">
+            <img src="https://iili.io/qvTTH8J.jpg">
+            <img src="https://iili.io/qvTTLSs.jpg">
+            <img src="https://iili.io/qvTTpx2.jpg">
+            <img src="https://iili.io/qvTuXef.jpg">
+            <img src="https://iili.io/qvTutrF.jpg">
+        </div>
+    </div>
+
+    <!-- Buttons Container - Top Right -->
+    <div class="fixed top-6 right-6 flex flex-col gap-4 z-20">
+        <!-- Sides Button -->
+        <button id="toggleBtn" onclick="toggleBackground()" 
+                class="glass-effect px-6 py-3 rounded-xl btn-3d text-xl font-bold">
+            <i class="fa fa-exchange mr-2"></i> Sides
+        </button>
+
+        <!-- Read Story Button -->
+        <a href="stories.html" 
+           class="glass-effect px-6 py-3 rounded-xl btn-3d text-xl font-bold text-center">
+            <i class="fa fa-book mr-2"></i> Read Story
+        </a>
+    </div>
+
+    <!-- Main Content -->
+    <main class="relative z-10 w-full h-full flex items-center pl-8 md:pl-16">
+        
+        <!-- Audio Buttons Container -->
+        <div class="flex flex-col gap-4 transform scale-50 origin-top-left md:scale-75">
+            
+            <!-- Button 1 - Shattered Composure-->
+            <button onclick="playAudio('story1.mp3')" 
+                    class="btn-3d glass-effect px-8 py-6 rounded-2xl w-48 h-48 flex flex-col items-center justify-center group border-love/50 hover:bg-love/20">
+                <i class="fa fa-heart text-5xl mb-3 text-love love-glow heart-beat"></i>
+                <span class="text-2xl font-bold tracking-wider text-love love-glow">Shattered Composure</span>
+                <span class="text-sm text-love/70 mt-2">Play Story</span>
+            </button>
+
+            <!-- Button 2 -->
+            <button onclick="playAudio('story2.mp3')" 
+                    class="btn-3d glass-effect px-8 py-6 rounded-2xl w-48 h-48 flex flex-col items-center justify-center group">
+                <i class="fa fa-play-circle text-5xl mb-3 text-white/80 group-hover:text-white transition-colors"></i>
+                <span class="text-xl font-semibold tracking-wider">Mirrored Surrender</span>
+                <span class="text-xs text-white/60 mt-1">Listen Now</span>
+            </button>
+
+            <!-- Button 3 Stop -->
+            <button onclick="stopAudio()" 
+                    class="btn-3d glass-effect px-8 py-6 rounded-2xl w-48 h-48 flex flex-col items-center justify-center group hover:bg-red-500/20">
+                <i class="fa fa-stop-circle text-5xl mb-3 text-white/80 group-hover:text-white transition-colors"></i>
+                <span class="text-xl font-semibold tracking-wider">STOP</span>
+                <span class="text-xs text-white/60 mt-1">End playback</span>
+            </button>
+        </div>
+
+    </main>
+
+    <!-- NEW ETHEREAL BUTTON - LOWER PART -->
+    <div class="fixed bottom-32 left-1/2 transform -translate-x-1/2 z-20">
+        <button class="ethereal-btn" onclick="playEthereal()">Ethereal Equation</button>
+    </div>
+
+    <!-- IMAGE OVERLAY -->
+    <div class="overlay" id="overlay">
+        <!-- NEW CLOSE BUTTON -->
+        <button class="close-btn" onclick="closeOverlay()">
+            <i class="fa fa-times"></i>
+        </button>
+        <img src="images/angel.jpg">
+    </div>
+
+    <!-- AUDIO PLAYER -->
+    <div class="audio-box" id="audioBox">
+        <audio id="audio" controls style="width:100%">
+            <source src="angel.mp3" type="audio/mpeg">
+        
+    </div>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+    let currentAudio = new Audio();
+    const bgMusic = new Audio('heaven.mp3');
+    const video = document.getElementById('bgVideo');
+    const slider = document.getElementById('bgSlider');
+    const toggleBtn = document.getElementById('toggleBtn');
+    let isImageMode = false;
+
+    // SLIDER
+    const slides = document.querySelectorAll('#bgSlider img');
+    let index = 0;
+    function showSlide() {
+        slides.forEach(el => el.classList.remove('active'));
+        slides[index].classList.add('active');
+        index = (index + 1) % slides.length;
+    }
+    showSlide();
+    setInterval(showSlide, 3000);
+
+    // AUDIO + VIDEO
+    bgMusic.loop = true;
+    bgMusic.volume = 0.5;
+    video.play();
+    bgMusic.play().catch(() => {});
+
+    // TOGGLE
+    window.toggleBackground = function () {
+        isImageMode = !isImageMode;
+        if (isImageMode) {
+            video.classList.add('hidden');
+            slider.classList.remove('hidden');
+            toggleBtn.innerHTML = '<i class="fa fa-video-camera mr-2"></i> Video';
+        } else {
+            video.classList.remove('hidden');
+            slider.classList.add('hidden');
+            toggleBtn.innerHTML = '<i class="fa fa-image mr-2"></i> Sides';
+        }
+    }
+
+    window.playAudio = function (src) {
+        if (currentAudio.src !== src) {
+            currentAudio.src = src;
+        }
+        currentAudio.play();
+        video.play();
+    }
+
+    window.stopAudio = function () {
+        currentAudio.pause();
+        currentAudio.currentTime = 0;
+    }
+
+    // NEW FUNCTION FOR ETHEREAL BUTTON
+    window.playEthereal = function(){
+        const audio = document.getElementById('audio');
+        const overlay = document.getElementById('overlay');
+        const box = document.getElementById('audioBox');
+
+        overlay.style.display = "block";
+        box.style.display = "block";
+
+        audio.play();
+    }
+
+    // NEW FUNCTION TO CLOSE OVERLAY
+    window.closeOverlay = function(){
+        const audio = document.getElementById('audio');
+        const overlay = document.getElementById('overlay');
+        const box = document.getElementById('audioBox');
+
+        audio.pause();
+        overlay.style.display = "none";
+        box.style.display = "none";
+    }
+
+});
+</script>
+</body>
+</html>
+            .btn-3d:hover {
+                transform: translateY(-5px) rotateX(5deg) rotateY(-5deg);
+                box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+            }
+            .video-opacity {
+                opacity: 0.4;
+            }
+            .image-opacity {
+                opacity: 0.5;
+            }
+            .love-glow {
+                text-shadow: 0 0 10px #ff6b9d, 0 0 20px #ff6b9d, 0 0 30px #ff6b9d;
+            }
+            .heart-beat {
+                animation: beat 1.5s infinite alternate;
+            }
+            @keyframes beat {
+                from { transform: scale(1); }
+                to { transform: scale(1.1); }
+            }
+            .float-animation {
+                animation: float 6s ease-in-out infinite;
+            }
+            @keyframes float {
+                0% { transform: translateY(0px); }
+                50% { transform: translateY(-20px); }
+                100% { transform: translateY(0px); }
+            }
         }
 #bgSlider img {
     width: 100%;
