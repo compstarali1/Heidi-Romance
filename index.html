@@ -3,666 +3,192 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3D Audio Experience</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        dark: '#0F0F17',
-                        love: '#ff6b9d'
-                    }
-                }
-            }
+    <title>Willow's Revenge</title>
+    <style>
+        :root {
+            --glass: rgba(255, 255, 255, 0.12);
+            --border: rgba(255, 255, 255, 0.2);
+            --accent: #00d4ff;
         }
-    </script>
-    <style type="text/tailwindcss">
-        @layer utilities {
-            .content-auto {
-                content-visibility: auto;
-            }
-            .glass-effect {
-                background: rgba(255, 255, 255, 0.08);
-                backdrop-filter: blur(12px);
-                -webkit-backdrop-filter: blur(12px);
-                border: 1px solid rgba(255, 255, 255, 0.18);
-                box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-            }
-            .btn-3d {
-                transform-style: preserve-3d;
-                transition: all 0.3s ease;
-            }
-            .btn-3d:hover {
-                transform: translateY(-5px) rotateX(5deg) rotateY(-5deg);
-                box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
-            }
-            .video-opacity {
-                opacity: 0.4;
-            }
-            .image-opacity {
-                opacity: 0.5;
-            }
-            .love-glow {
-                text-shadow: 0 0 10px #ff6b9d, 0 0 20px #ff6b9d, 0 0 30px #ff6b9d;
-            }
-            .heart-beat {
-                animation: beat 1.5s infinite alternate;
-            }
-            @keyframes beat {
-                from { transform: scale(1); }
-                to { transform: scale(1.1); }
-            }
-            .float-animation {
-                animation: float 6s ease-in-out infinite;
-            }
-            @keyframes float {
-                0% { transform: translateY(0px); }
-                50% { transform: translateY(-20px); }
-                100% { transform: translateY(0px); }
-            }
 
-            /* NEW STYLES FOR ETHEREAL BUTTON */
-            .ethereal-btn{
-                padding:25px 60px;
-                font-size:24px;
-                font-weight:bold;
-                color:#fff;
-                background:linear-gradient(145deg,#9c27b0,#3f51b5);
-                border:none;
-                border-radius:12px;
-                cursor:pointer;
-                box-shadow:0 10px 20px rgba(0,0,0,0.4);
-                transition: all 0.3s ease;
-            }
-            .ethereal-btn:hover {
-                transform: translateY(-5px);
-                box-shadow: 0 15px 35px rgba(0,0,0,0.5);
-            }
-            .overlay {
-                position:fixed;
-                top:50%;
-                left:50%;
-                transform:translate(-50%,-50%);
-                width:100%; /* CHANGED TO 100% WIDTH */
-                height:auto; /* CHANGED TO AUTO HEIGHT */
-                max-width:90%;
-                margin:20px;
-                display:none;
-                z-index:999;
-            }
-            .overlay img{
-                width:100%;
-                height:auto; /* MAINTAINS RATIO */
-                border-radius:12px;
-            }
-            .audio-box{
-                position:fixed;
-                bottom:20px;
-                left:50%;
-                transform:translateX(-50%);
-                width:70%;
-                display:none;
-                z-index: 1000;
-            }
-            /* NEW CLOSE BUTTON STYLE */
-            .close-btn {
-                position: absolute;
-                top: 15px;
-                right: 15px;
-                background: rgba(0,0,0,0.5);
-                color: white;
-                border: none;
-                border-radius: 50%;
-                width: 40px;
-                height: 40px;
-                font-size: 20px;
-                cursor: pointer;
-                z-index: 1001;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-            }
-            .close-btn:hover {
-                background: rgba(255,0,0,0.7);
-            }
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background: transparent !important;
+            font-family: 'Segoe UI', sans-serif;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
         }
+
+        /* GIF Background */
+        .bg-gif {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('revenge.gif') center/cover no-repeat;
+            opacity: 0.7;
+            z-index: -2;
+        }
+
+        /* Starfield */
+        #starfield {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* Layout for Buttons */
+        .button-group {
+            display: flex;
+            gap: 20px;
+            z-index: 10;
+        }
+
+        .glass-btn {
+            height: 80px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(25px);
+            border: 2px solid var(--border);
+            border-radius: 15px;
+            color: white;
+            font-weight: bold;
+            text-transform: uppercase;
+            cursor: pointer;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
+            transition: 0.3s ease;
+        }
+
+        #playBtn { width: 220px; font-size: 1.1rem; letter-spacing: 1px; }
+        #muteBtn { width: 80px; font-size: 1.5rem; }
+
+        .glass-btn:active { transform: scale(0.95); }
+        .glass-btn:hover { 
+            border-color: var(--accent); 
+            box-shadow: 0 0 20px var(--accent);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        /* Progress Bar */
+        .controls {
+            position: absolute;
+            bottom: 60px;
+            width: 80%;
+            max-width: 600px;
+        }
+
+        #seek-bar {
+            width: 100%;
+            cursor: pointer;
+            accent-color: var(--accent);
+            filter: drop-shadow(0 0 5px var(--accent));
+        }
+
+        canvas { width: 100%; height: 100%; }
     </style>
 </head>
-<body class="bg-dark text-white overflow-hidden h-screen w-screen">
-
-    <!-- Background Video -->
-    <video id="bgVideo" class="fixed top-0 left-0 w-full h-full object-cover video-opacity -z-20" loop muted playsinline>
-        <source src="ali.mp4" type="video/mp4">
-    </video>
-
-    <!-- Background Image Slider -->
-    <div id="bgSlider" class="fixed top-0 left-0 w-full h-full -z-10 overflow-hidden hidden">
-        <div class="slides">
-            <img src="https://iili.io/qvTzTUG.jpg">
-            <img src="https://iili.io/qvTxyV1.jpg">
-            <img src="https://iili.io/qvTInmQ.jpg">
-            <img src="https://iili.io/qvTIB7j.jpg">
-            <img src="https://iili.io/qvTTH8J.jpg">
-            <img src="https://iili.io/qvTTLSs.jpg">
-            <img src="https://iili.io/qvTTpx2.jpg">
-            <img src="https://iili.io/qvTuXef.jpg">
-            <img src="https://iili.io/qvTutrF.jpg">
-        </div>
-    </div>
-
-    <!-- Buttons Container - Top Right -->
-    <div class="fixed top-6 right-6 flex flex-col gap-4 z-20">
-        <!-- Sides Button -->
-        <button id="toggleBtn" onclick="toggleBackground()" 
-                class="glass-effect px-6 py-3 rounded-xl btn-3d text-xl font-bold">
-            <i class="fa fa-exchange mr-2"></i> Sides
-        </button>
-
-        <!-- Read Story Button -->
-        <a href="stories.html" 
-           class="glass-effect px-6 py-3 rounded-xl btn-3d text-xl font-bold text-center">
-            <i class="fa fa-book mr-2"></i> Read Story
-        </a>
-    </div>
-
-    <!-- Main Content -->
-    <main class="relative z-10 w-full h-full flex items-center pl-8 md:pl-16">
-        
-        <!-- Audio Buttons Container -->
-        <div class="flex flex-col gap-4 transform scale-50 origin-top-left md:scale-75">
-            
-            <!-- Button 1 - Shattered Composure-->
-            <button onclick="playAudio('story1.mp3')" 
-                    class="btn-3d glass-effect px-8 py-6 rounded-2xl w-48 h-48 flex flex-col items-center justify-center group border-love/50 hover:bg-love/20">
-                <i class="fa fa-heart text-5xl mb-3 text-love love-glow heart-beat"></i>
-                <span class="text-2xl font-bold tracking-wider text-love love-glow">Shattered Composure</span>
-                <span class="text-sm text-love/70 mt-2">Play Story</span>
-            </button>
-
-            <!-- Button 2 -->
-            <button onclick="playAudio('story2.mp3')" 
-                    class="btn-3d glass-effect px-8 py-6 rounded-2xl w-48 h-48 flex flex-col items-center justify-center group">
-                <i class="fa fa-play-circle text-5xl mb-3 text-white/80 group-hover:text-white transition-colors"></i>
-                <span class="text-xl font-semibold tracking-wider">Mirrored Surrender</span>
-                <span class="text-xs text-white/60 mt-1">Listen Now</span>
-            </button>
-
-            <!-- Button 3 Stop -->
-            <button onclick="stopAudio()" 
-                    class="btn-3d glass-effect px-8 py-6 rounded-2xl w-48 h-48 flex flex-col items-center justify-center group hover:bg-red-500/20">
-                <i class="fa fa-stop-circle text-5xl mb-3 text-white/80 group-hover:text-white transition-colors"></i>
-                <span class="text-xl font-semibold tracking-wider">STOP</span>
-                <span class="text-xs text-white/60 mt-1">End playback</span>
-            </button>
-        </div>
-
-    </main>
-
-    <!-- NEW ETHEREAL BUTTON - LOWER PART -->
-    <div class="fixed bottom-32 left-1/2 transform -translate-x-1/2 z-20">
-        <button class="ethereal-btn" onclick="playEthereal()">Ethereal Equation</button>
-    </div>
-
-    <!-- IMAGE OVERLAY -->
-    <div class="overlay" id="overlay">
-        <!-- NEW CLOSE BUTTON -->
-        <button class="close-btn" onclick="closeOverlay()">
-            <i class="fa fa-times"></i>
-        </button>
-        <img src="images/angel.jpg">
-    </div>
-
-    <!-- AUDIO PLAYER -->
-    <div class="audio-box" id="audioBox">
-        <audio id="audio" controls style="width:100%">
-            <source src="angel.mp3" type="audio/mpeg">
-        
-    </div>
-
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-
-    let currentAudio = new Audio();
-    const bgMusic = new Audio('heaven.mp3');
-    const video = document.getElementById('bgVideo');
-    const slider = document.getElementById('bgSlider');
-    const toggleBtn = document.getElementById('toggleBtn');
-    let isImageMode = false;
-
-    // SLIDER
-    const slides = document.querySelectorAll('#bgSlider img');
-    let index = 0;
-    function showSlide() {
-        slides.forEach(el => el.classList.remove('active'));
-        slides[index].classList.add('active');
-        index = (index + 1) % slides.length;
-    }
-    showSlide();
-    setInterval(showSlide, 3000);
-
-    // AUDIO + VIDEO
-    bgMusic.loop = true;
-    bgMusic.volume = 0.5;
-    video.play();
-    bgMusic.play().catch(() => {});
-
-    // TOGGLE
-    window.toggleBackground = function () {
-        isImageMode = !isImageMode;
-        if (isImageMode) {
-            video.classList.add('hidden');
-            slider.classList.remove('hidden');
-            toggleBtn.innerHTML = '<i class="fa fa-video-camera mr-2"></i> Video';
-        } else {
-            video.classList.remove('hidden');
-            slider.classList.add('hidden');
-            toggleBtn.innerHTML = '<i class="fa fa-image mr-2"></i> Sides';
-        }
-    }
-
-    window.playAudio = function (src) {
-        if (currentAudio.src !== src) {
-            currentAudio.src = src;
-        }
-        currentAudio.play();
-        video.play();
-    }
-
-    window.stopAudio = function () {
-        currentAudio.pause();
-        currentAudio.currentTime = 0;
-    }
-
-    // NEW FUNCTION FOR ETHEREAL BUTTON
-    window.playEthereal = function(){
-        const audio = document.getElementById('audio');
-        const overlay = document.getElementById('overlay');
-        const box = document.getElementById('audioBox');
-
-        overlay.style.display = "block";
-        box.style.display = "block";
-
-        audio.play();
-    }
-
-    // NEW FUNCTION TO CLOSE OVERLAY
-    window.closeOverlay = function(){
-        const audio = document.getElementById('audio');
-        const overlay = document.getElementById('overlay');
-        const box = document.getElementById('audioBox');
-
-        audio.pause();
-        overlay.style.display = "none";
-        box.style.display = "none";
-    }
-
-});
-</script>
-</body>
-</html>
-            .btn-3d:hover {
-                transform: translateY(-5px) rotateX(5deg) rotateY(-5deg);
-                box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
-            }
-            .video-opacity {
-                opacity: 0.4;
-            }
-            .image-opacity {
-                opacity: 0.5;
-            }
-            .love-glow {
-                text-shadow: 0 0 10px #ff6b9d, 0 0 20px #ff6b9d, 0 0 30px #ff6b9d;
-            }
-            .heart-beat {
-                animation: beat 1.5s infinite alternate;
-            }
-            @keyframes beat {
-                from { transform: scale(1); }
-                to { transform: scale(1.1); }
-            }
-            .float-animation {
-                animation: float 6s ease-in-out infinite;
-            }
-            @keyframes float {
-                0% { transform: translateY(0px); }
-                50% { transform: translateY(-20px); }
-                100% { transform: translateY(0px); }
-            }
-        }
-#bgSlider img {
-    width: 100%;
-    height: 100vh;
-    object-fit: cover;
-    position: absolute;
-    opacity: 0;
-    transition: opacity 1.5s ease-in-out;
-}
-
-#bgSlider img.active {
-    opacity: 0.25; /* adjust transparency */
-}
-    </style>
-</head>
-<body class="bg-dark text-white overflow-hidden h-screen w-screen">
-
-    <!-- Background Video -->
-    <video id="bgVideo" class="fixed top-0 left-0 w-full h-full object-cover video-opacity -z-20" loop muted playsinline>
-        <source src="ali.mp4" type="video/mp4">
-    </video>
-
-<!-- Background Image Slider -->
-<div id="bgSlider" class="fixed top-0 left-0 w-full h-full -z-10 overflow-hidden hidden">
-
-<div class="slides">
-    <img src="https://iili.io/qvTzTUG.jpg">
-    <img src="https://iili.io/qvTxyV1.jpg">
-    <img src="https://iili.io/qvTInmQ.jpg">
-    <img src="https://iili.io/qvTIB7j.jpg">
-    <img src="https://iili.io/qvTTH8J.jpg">
-    <img src="https://iili.io/qvTTLSs.jpg">
-    <img src="https://iili.io/qvTTpx2.jpg">
-    <img src="https://iili.io/qvTuXef.jpg">
-    <img src="https://iili.io/qvTutrF.jpg">
-</div>
-
-</div>
-
-    <!-- Buttons Container - Top Right -->
-    <div class="fixed top-6 right-6 flex flex-col gap-4 z-20">
-        <!-- Sides Button -->
-        <button id="toggleBtn" onclick="toggleBackground()" 
-                class="glass-effect px-6 py-3 rounded-xl btn-3d text-xl font-bold">
-            <i class="fa fa-exchange mr-2"></i> Sides
-        </button>
-
-        <!-- Read Story Button -->
-        <a href="stories.html" 
-           class="glass-effect px-6 py-3 rounded-xl btn-3d text-xl font-bold text-center">
-            <i class="fa fa-book mr-2"></i> Read Story
-        </a>
-    </div>
-
-    <!-- Main Content -->
-    <main class="relative z-10 w-full h-full flex items-center pl-8 md:pl-16">
-        
-        <!-- Audio Buttons Container -->
-        <div class="flex flex-col gap-4 transform scale-50 origin-top-left md:scale-75">
-            
-            <!-- Button 1 - Shattered Composure-->
-            <button onclick="playAudio('story1.mp3')" 
-                    class="btn-3d glass-effect px-8 py-6 rounded-2xl w-48 h-48 flex flex-col items-center justify-center group border-love/50 hover:bg-love/20">
-                <i class="fa fa-heart text-5xl mb-3 text-love love-glow heart-beat"></i>
-                <span class="text-2xl font-bold tracking-wider text-love love-glow">Shattered Composure</span>
-                <span class="text-sm text-love/70 mt-2">Play Story</span>
-            </button>
-
-            <!-- Button 2 -->
-            <button onclick="playAudio('story2.mp3')" 
-                    class="btn-3d glass-effect px-8 py-6 rounded-2xl w-48 h-48 flex flex-col items-center justify-center group">
-                <i class="fa fa-play-circle text-5xl mb-3 text-white/80 group-hover:text-white transition-colors"></i>
-                <span class="text-xl font-semibold tracking-wider">Mirrored Surrender</span>
-                <span class="text-xs text-white/60 mt-1">Listen Now</span>
-            </button>
-
-            <!-- Button 3 Stop -->
-            <button onclick="stopAudio()" 
-                    class="btn-3d glass-effect px-8 py-6 rounded-2xl w-48 h-48 flex flex-col items-center justify-center group hover:bg-red-500/20">
-                <i class="fa fa-stop-circle text-5xl mb-3 text-white/80 group-hover:text-white transition-colors"></i>
-                <span class="text-xl font-semibold tracking-wider">STOP</span>
-                <span class="text-xs text-white/60 mt-1">End playback</span>
-            </button>
-        </div>
-
-    </main>
-
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-
-    let currentAudio = new Audio();
-    const bgMusic = new Audio('heaven.mp3');
-    const video = document.getElementById('bgVideo');
-    const slider = document.getElementById('bgSlider'); // FIXED
-    const toggleBtn = document.getElementById('toggleBtn');
-    let isImageMode = false;
-
-    // SLIDER FIX
-    const slides = document.querySelectorAll('#bgSlider img');
-    let index = 0;
-
-    function showSlide() {
-        slides.forEach(el => el.classList.remove('active'));
-        slides[index].classList.add('active');
-        index = (index + 1) % slides.length;
-    }
-
-    showSlide();
-    setInterval(showSlide, 3000);
-
-    // AUDIO + VIDEO
-    bgMusic.loop = true;
-    bgMusic.volume = 0.5;
-
-    video.play();
-    bgMusic.play().catch(() => {});
-
-    // TOGGLE FIX
-    window.toggleBackground = function () {
-        isImageMode = !isImageMode;
-
-        if (isImageMode) {
-            video.classList.add('hidden');
-            slider.classList.remove('hidden'); // FIXED
-            toggleBtn.innerHTML = '<i class="fa fa-video-camera mr-2"></i> Video';
-        } else {
-            video.classList.remove('hidden');
-            slider.classList.add('hidden'); // FIXED
-            toggleBtn.innerHTML = '<i class="fa fa-image mr-2"></i> Sides';
-        }
-    }
-
-    window.playAudio = function (src) {
-        if (currentAudio.src !== src) {
-            currentAudio.src = src;
-        }
-        currentAudio.play();
-        video.play();
-    }
-
-    window.stopAudio = function () {
-        currentAudio.pause();
-        currentAudio.currentTime = 0;
-    }
-
-});
-</script>
-</body>
-</html>
-object-fit:cover;
-display:block;
-}
-
-.glass-overlay{
-position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
-background:rgba(0,0,0,0.7);
-z-index:-5;
-}
-
-.scroll-content{
-position:relative;
-z-index:10;
-width:100%;
-padding:0 10%;
-background:transparent;
-}
-
-.top-hero-section{
-padding-top:10vh;
-padding-bottom:50px;
-display:flex;
-flex-direction:column;
-align-items:center;
-}
-
-h1{
-font-family:'Great Vibes',cursive;
-font-size:clamp(2.5rem,8vw,4.5rem);
-color:#c5a059;
-text-align:center;
-margin-bottom:40px;
-text-shadow:2px 2px 15px rgba(0,0,0,0.8);
-}
-
-.portrait-frame{
-width:100%;
-max-width:500px;
-border:1px solid rgba(197,160,89,0.5);
-box-shadow:0 20px 50px rgba(0,0,0,0.7);
-animation:float3d 6s ease-in-out infinite;
-}
-
-.portrait-frame img{
-width:100%;
-display:block;
-}
-
-@keyframes float3d{
-0%,100%{transform:translateY(0) rotateX(2deg);}
-50%{transform:translateY(-15px) rotateX(5deg);}
-}
-
-.story-text-container{
-padding:40px 0;
-font-size:1.4rem;
-line-height:2.2;
-text-align:justify;
-text-shadow:2px 2px 10px rgba(0,0,0,1);
-}
-
-.drop-cap{
-font-family:'Great Vibes',cursive;
-font-size:6rem;
-float:left;
-margin-right:15px;
-line-height:0.7;
-color:#c5a059;
-}
-
-.petal{
-position:fixed;
-top:-50px;
-z-index:100;
-font-size:20px;
-animation:fall linear infinite;
-}
-
-@keyframes fall{
-to{transform:translateY(110vh) rotate(360deg);}
-}
-
-footer{
-padding:100px 0;
-text-align:center;
-font-family:'Great Vibes',cursive;
-font-size:3rem;
-color:#c5a059;
-text-shadow:2px 2px 10px rgba(0,0,0,1);
-}
-
-@media(max-width:768px){
-
-.scroll-content{padding:0 5%;}
-.story-text-container{font-size:1.15rem;}
-.drop-cap{font-size:4rem;}
-
-}
-
-</style>
-</head>
-
 <body>
 
-<div class="fixed-bg-container">
-<img src="images/background_picnic.jpg" alt="Picnic Background">
-</div>
+    <div class="bg-gif"></div>
+    <canvas id="starfield"></canvas>
 
-<div class="glass-overlay"></div>
+    <div class="button-group">
+        <button class="glass-btn" id="playBtn">Prank on Ali</button>
+        <button class="glass-btn" id="muteBtn" title="Mute/Unmute">🔊</button>
+    </div>
 
-<div class="scroll-content">
+    <div class="controls">
+        <input type="range" id="seek-bar" value="0" step="0.1">
+    </div>
 
-<script>
+    <!-- Direct Audio Loading -->
+    <audio id="audioTrack" preload="auto">
+        <source src="payback.mp3" type="audio/mpeg">
+    
 
-function spawnPetal(){
+    <script>
+        const audio = document.getElementById('audioTrack');
+        const playBtn = document.getElementById('playBtn');
+        const muteBtn = document.getElementById('muteBtn');
+        const seekBar = document.getElementById('seek-bar');
+        const canvas = document.getElementById('starfield');
+        const ctx = canvas.getContext('2d');
 
-const p=document.createElement('div');
-p.classList.add('petal');
+        // Simple Toggle Play/Pause
+        playBtn.addEventListener('click', () => {
+            if (audio.paused) {
+                audio.play().then(() => {
+                    playBtn.innerText = "Playing...";
+                }).catch(error => {
+                    console.error("Playback failed:", error);
+                    alert("Please ensure payback.mp3 is in the same folder.");
+                });
+            } else {
+                audio.pause();
+                playBtn.innerText = "Paused";
+            }
+        });
 
-p.innerHTML=['🌸','✨','🌹'][Math.floor(Math.random()*3)];
+        // Simple Toggle Mute
+        muteBtn.addEventListener('click', () => {
+            audio.muted = !audio.muted;
+            muteBtn.innerText = audio.muted ? "🔇" : "🔊";
+            muteBtn.style.color = audio.muted ? "#ff4d4d" : "white";
+        });
 
-p.style.left=Math.random()*100+'vw';
-p.style.animationDuration=Math.random()*3+4+'s';
-p.style.opacity=Math.random();
+        // Starfield logic
+        let stars = [];
+        function initStars() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            stars = Array.from({length: 20}, () => ({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                size: Math.random() * 2 + 1,
+                speed: Math.random() * 1 + 0.5
+            }));
+        }
 
-document.body.appendChild(p);
+        function animateStars() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = "rgba(255, 255, 255, 0.8)";
+            stars.forEach(s => {
+                ctx.beginPath(); 
+                ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2); 
+                ctx.fill();
+                s.y -= s.speed;
+                if (s.y < 0) s.y = canvas.height;
+            });
+            requestAnimationFrame(animateStars);
+        }
 
-setTimeout(()=>p.remove(),7000);
+        // Progress Bar Update
+        audio.ontimeupdate = () => { 
+            if (audio.duration) {
+                seekBar.value = (audio.currentTime / audio.duration) * 100;
+            }
+        };
 
-}
+        // Seeking
+        seekBar.oninput = () => { 
+            if (audio.duration) {
+                audio.currentTime = (seekBar.value / 100) * audio.duration;
+            }
+        };
 
-setInterval(spawnPetal,800);
-
-</script>
-
-<section class="top-hero-section">
-
-<h1>The Van’s Warm Embrace</h1>
-
-<div class="portrait-frame">
-<img src="images/heidi_portrait.jpg" alt="Heidi Portrait">
-</div>
-
-</section>
-
-<article class="story-text-container">
-
-<p><span class="drop-cap">H</span>eidi slips into Ali’s van after work, drawn by his text and the promise of escape. The heat of the van wraps around her like a lover’s embrace, the scent of leather and bergamot mingling with the metallic tang of his tools. When his hands find her, rough and possessive, she’s torn between the thrill of danger and the heat building inside her.</p>
-
-<p>The workplace lights flickered overhead like dying fireflies, casting long shadows across the empty desks as I slipped my phone back into my purse. Ali’s text had come through just as I was locking my drawer—big eyes emoji, pretty please—no words needed. My fingers tightened around the smooth leather strap of my bag, the weight of the day’s frustration still clinging to my shoulders like a second skin. The hum of the fluorescent bulbs buzzed in my ears, too bright, too sterile, as I made my way toward the back exit, heels clicking sharply against the polished floor.</p>
-
-<p>The back street smelled of damp pavement and diesel fumes, the air thick with the kind of chill that seeped through wool coats. My breath curled in front of me as I scanned the line of parked vans, their dark windows reflecting the sickly orange glow of the streetlamps. Then I saw it—Ali’s sleek black cargo van, humming quietly, a thin wisp of steam rising from the exhaust pipe. The side door was cracked open just enough to spill a warm, golden rectangle of light onto the asphalt. My pulse kicked up, not from the cold, but from the promise of what waited inside.</p>
-
-<p>I ducked in, the heat wrapping around me like a lover’s arms, rich and sudden. The van smelled of leather and something citrusy—bergamot, maybe—mixed with the faint metallic tang of Ali’s tools. The space was immaculate, the floor covered in a thick, plush blanket that muffled my steps as I kicked off my heels. His office chair sat at the far end, angled toward a small monitor mounted on the wall, the CCTV feed flickering with static. Tools and spare parts were neatly pushed into the corner, their silhouettes sharp against the dim lighting. And there, on the folded-down bench seat, was a plastic cup of wine, the deep red liquid catching the light like a promise.</p>
-
-<p>“Took you long enough,” Ali murmured, not turning around. His voice was rough, the kind of rough that made my thighs press together. He was still in his suit jacket, the tie loosened just enough to show the crisp white of his shirt beneath. His broad shoulders shifted as he reached for something on the dashboard, the muscles beneath the fabric flexing in a way that had my breath hitching.</p>
-
-<p>I swallowed, my fingers brushing the stem of the wineglass as I sat. “Had to make sure no one saw me sneaking out like a teenager.” The wine was good—dry, with a bite that lingered on my tongue. I took another sip, letting the warmth of it spread through me, loosening the knots in my chest. The van’s engine purred softly, the vibrations humming up through the blanket, through my stockings.</p>
-
-<p>Then his hand was on my knee.</p>
-
-<p>I jumped, wine sloshing over the rim of the cup, but before I could react, his fingers were already sliding upward, bunching the fabric of my skirt. His touch was sure, possessive, like he’d been thinking about this all day.</p>
-
-<p>“Ali—” My voice came out breathier than I meant it to.</p>
-
-<p>“Shh.” His other hand found my wrist, guiding the wineglass to the bench beside me before his fingers curled around the back of my neck, pulling me forward. His mouth crashed into mine, hot and demanding. I moaned into him, my free hand gripping his shoulder as he kissed me deeper.</p>
-
-<p>The van’s windows were dark, but the CCTV monitor flickered in the corner, the grainy feed showing the empty alley outside. Anyone could walk by. Anyone could see.</p>
-
-<p>And somehow that thought alone made my pulse race even faster.</p>
-
-</article>
-
-<footer>
-
-Forever Yours, Ali
-
-</footer>
-
-</div>
-
+        initStars();
+        animateStars();
+        window.onresize = initStars;
+    </script>
 </body>
 </html>
